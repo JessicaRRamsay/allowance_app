@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Alice&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+body {
+    padding: 0;
+    margin: 0;
+    background-color: #eff3fd;
+    font-family: Montserrat;
+}
+
+main {
+    max-width: 1250px;
+    margin: 40px auto;
+}
+
+/* Children display cards */
+.children-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 25px;
+}
+
+.children-display article {
+    background-color: #d6ddec;
+    border: 2px solid #899fcb;
+    border-radius: 20px;
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.children-display h2 {
+    font-family: Alice;
+    font-size: 36px;
+    margin-top: 0;
+}
+
+.children-display p {
+    font-size: 20px;
+    margin: 12px 0;
+}
+
+/* Entries row */
+.entries {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 120px;
+    gap: 15px;
+    align-items: center;
+}
+
+/* Light blue entry boxes */
+.entry-box {
+    background-color: #d6ddec;
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.entry-box label {
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+.entry-box input,
+.entry-box select {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    outline: none;
+}
+
+.entries .submit {
+    background-color: #5570a4;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-family: Montserrat;
+    font-size: 16px;
+    cursor: pointer;
+}

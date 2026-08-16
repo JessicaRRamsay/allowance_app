@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reward Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main>
+        <div class="children-display">
+            <article class="child">
+                <h2>Aubrie Cooper</h2>
+                <p class="balance">Balance: $<span id="balance-a"></span></p>
+                <p class="bonus">New Years bonus: <span id="bonus-a"></span></p>
+            </article>
+
+            <article class="child">
+                <h2>Rangi Cooper</h2>
+                <p class="balance">Balance: $<span id="balance-r"></span></p>
+                <p class="bonus">New Years bonus: <span id="bonus-r"></span></p>
+            </article>
+
+            <article class="child">
+                <h2>Manaia Cooper</h2>
+                <p class="balance">Balance: $<span id="balance-m"></span></p>
+                <p class="bonus">New Years bonus: <span id="bonus-m"></span></p>
+            </article>
+        </div>
+
+        <div class="entries">
+            <div class="entry-box">
+                <label>Value spent:</label>
+                <input type="number">
+            </div>
+
+            <div class="entry-box">
+                <label>Reward:</label>
+                <select>
+                    <option>Cafe</option>
+                    <option>Swimming Pool</option>
+                </select>
+            </div>
+
+            <div class="entry-box">
+                <label>Child:</label>
+                <select>
+                    <option>Aubrie</option>
+                    <option>Rangi</option>
+                    <option>Manaia</option>
+                </select>
+            </div>
+
+            <button class="submit">Submit</button>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
