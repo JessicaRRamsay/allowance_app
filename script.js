@@ -1,12 +1,19 @@
-const startingBudget = 500
-
 class Family {
-    constructor(name) {
+    #startingBudget
+
+    constructor(startingBudget) {
+        this.#startingBudget = startingBudget
         this.children = [
             new Child("Aubrie Cooper"),
             new Child("Rangi Cooper"),
             new Child("Manaia Cooper")
         ]
+    }
+
+    addNewYearBudget() {
+        for (const child of this.children) {
+            child.deposit(this.#startingBudget)
+        }
     }
 }
 
@@ -20,6 +27,10 @@ class Child {
     balance() {
         return this.#balance
     }
+
+    deposit(amount) {
+        this.#balance = this.#balance + amount
+    }
 }
 
 class App {
@@ -27,11 +38,26 @@ class App {
     #family
 
     constructor(document) {
-        this.#family = new Family()
+        this.#family = new Family(500)
     }
 
     start() {
+        if (this.isStartOfYear()) {
+            this.#family.addNewYearBudget()
+        }
+        else {
+            this.loadBalances()
+        }
+
         this.render()
+    }
+
+    isStartOfYear() {
+        return true
+    }
+
+    loadBalances() {
+
     }
 
     render() {
