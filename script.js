@@ -22,6 +22,14 @@ class Family {
             child.deposit(this.#startingBudget)
         }
     }
+
+    loadBalances() {
+        // TODO: load each child's balance from local storage
+    }
+
+    saveBalances() {
+        // TODO: Save balances to local storage
+    }
 }
 
 class Child {
@@ -55,10 +63,10 @@ class App {
     start() {
         if (this.isStartOfYear()) {
             this.#family.depositAnnualAllowance()
-            this.saveBalances()
+            this.#family.saveBalances()
         }
         else {
-            this.loadBalances()
+            this.#family.loadBalances()
         }
 
         this.renderChildPanels()
@@ -66,15 +74,6 @@ class App {
 
     isStartOfYear() {
         return true // TODO: understand how to detect the start of the year
-    }
-
-
-    loadBalances() {
-        // TODO: load each child's balance from local storage
-    }
-
-    saveBalances() {
-        // TODO: Save balances to local storage
     }
 
     renderChildPanels() {
