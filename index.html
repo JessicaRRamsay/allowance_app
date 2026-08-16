@@ -11,7 +11,13 @@
 <body>
     <main>
         <div class="children-display" id="children">
-
+            <template id="child-template">
+                <article class="child">
+                    <h2 class="child-name"></h2>
+                    <p class="balance">Balance: $<span class="balance-value"></span></p>
+                    <p class="bonus">New Years bonus: <span id="bonus"></span></p>
+                </article>
+            </template>
         </div>
 
         <div class="entries">
@@ -41,14 +47,6 @@
             <button class="submit">Submit</button>
         </div>
     </main>
-
-    <template id="child-template">
-        <article class="child">
-            <h2 class="child-name"></h2>
-            <p class="balance">Balance: $<span id="balance-a"></span></p>
-            <p class="bonus">New Years bonus: <span id="bonus-a"></span></p>
-        </article>
-    </template>
 
     <script src="script.js"></script>
 </body>
