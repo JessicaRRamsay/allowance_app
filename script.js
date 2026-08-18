@@ -27,8 +27,10 @@ class Family {
         // TODO: load each child's balance from local storage
         for (const child of this.#children) {
             let storageKey = `balance_${child.key()}`
-            let savedBalance = localStorage.getItem(JSON.parse(storageKey))
-            console.log(`Received ${savedBalace}`)
+            let savedBalanceString = localStorage.getItem(storageKey)
+            let savedBalance = JSON.parse(savedBalanceString)
+            console.log(`Received ${savedBalance}`)
+            child.restoreBalance(savedBalance)
         }
     }
 
@@ -68,6 +70,10 @@ class Child {
     key() {
         return this.#key
     }
+
+    restoreBalance(localStorageBalance) {
+        this.#balance = localStorageBalance
+    }
 }
 
 class App {
@@ -93,7 +99,17 @@ class App {
     }
 
     isStartOfYear() {
-        return true // TODO: understand how to detect the start of the year
+        let firstChild = this.#family.children()[0]
+        let storageKey = `balance_${firstChild.key()}`
+        let balance = localStorage.getItem(storageKey)
+
+        if (balance === null) {
+            console.log("Happy new year!")
+            return true
+        }
+        else {
+            return false
+        }
     }
 
     renderChildPanels() {
