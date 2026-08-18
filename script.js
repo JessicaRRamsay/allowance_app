@@ -6,9 +6,9 @@ class Family {
     constructor(startingBudget) {
         this.#startingBudget = startingBudget
         this.#children = [
-            new Child("Aubrie Cooper"),
-            new Child("Rangi Cooper"),
-            new Child("Manaia Cooper")
+            new Child("Aubrie Cooper", "aubrie"),
+            new Child("Rangi Cooper", "rangi"),
+            new Child("Manaia Cooper", "manaia")
         ]
     }
 
@@ -25,20 +25,32 @@ class Family {
 
     loadBalances() {
         // TODO: load each child's balance from local storage
+        for (const child of this.#children) {
+            let storageKey = `balance_${child.key()}`
+            let savedBalance = localStorage.getItem(JSON.parse(storageKey))
+            console.log(`Received ${savedBalace}`)
+        }
     }
 
     saveBalances() {
-        // TODO: Save balances to local storage
+        for (const child of this.#children) {
+            let storageKey = `balance_${child.key()}`
+            localStorage.setItem(storageKey, JSON.stringify(child.balance()))
+            console.log(`Saved ${storageKey}`)
+        }
     }
 }
 
 class Child {
     // I have made the balance private to avoid unwanted additions 
     #balance = 0
+    #name
+    #key
 
     // Creates a new child object
-    constructor(name) {
-        this.name = name;
+    constructor(name, key) {
+        this.#name = name
+        this.#key = key
     }
 
     balance() {
@@ -47,6 +59,14 @@ class Child {
 
     deposit(amount) {
         this.#balance += amount
+    }
+
+    name() {
+        return this.#name
+    }
+
+    key() {
+        return this.#key
     }
 }
 
@@ -89,7 +109,7 @@ class App {
             let clonedChildElememt = childTemplate.content.cloneNode(true)
 
             // Set child's name
-            clonedChildElememt.querySelector(".child-name").textContent = child.name
+            clonedChildElememt.querySelector(".child-name").textContent = child.name()
 
             // Set child's balance
             clonedChildElememt.querySelector(".balance-value").textContent = child.balance()
