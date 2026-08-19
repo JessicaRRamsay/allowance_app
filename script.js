@@ -143,6 +143,7 @@ class App {
         const withdrawBtn = document.getElementById("withdraw-button")
         const withdrawClose = document.getElementById("withdraw-close")
         const selectChildren = document.getElementById("children-select")
+        const withdrawSubmit = document.getElementById("withdraw-submit")
 
         // Show popup
         withdrawBtn.addEventListener("click", function () {
@@ -154,6 +155,7 @@ class App {
             withdrawPopup.close()
         })
 
+        // Adds the children to dropdown menu when withdrawling
         for (const child of this.#family.children()) {
             const childOption = document.createElement("option")
             childOption.value = child.key()
@@ -162,12 +164,18 @@ class App {
             selectChildren.append(childOption)
         }
 
-
-        // go through each child in the family
-        //   - create a OPTION element variable
-        //   - set the OPTION element value to "child.key" and the content to "child.name"
-        //   - insert that element into the HTML in the right place (as a nested element of childrenSelect)
+        withdrawSubmit.addEventListener("click", this.tryToWithdraw)
     }
+
+    tryToWithdraw() {
+
+
+        // get select element and call .value or .selected
+        // check if they have enough money to withdraw
+        // make sure they have a child selected if they are withdrawling
+
+    }
+
 }
 
 
