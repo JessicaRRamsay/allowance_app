@@ -51,6 +51,16 @@
 
     <dialog id="withdraw-popup">
         <h2>Withdraw from your account</h2>
+        <form id="withdraw-form">
+            <label for="child">Child</label>
+            <select name="child" id="children-select" required>
+                <option value=" " disable selected>Choose a child...</option>
+            </select>
+
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" name="amount" min="0.01" step="0.01" placeholder="0.00" required>
+            <button type="submit">Withdraw</button>
+        </form>
         <button id="withdraw-close">Close</button>
     </dialog>
 

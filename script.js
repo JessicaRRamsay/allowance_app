@@ -76,6 +76,7 @@ class Child {
     }
 }
 
+// Do all the HTML interaction
 class App {
     // Private variables
     #family
@@ -96,7 +97,7 @@ class App {
         }
 
         this.renderChildPanels()
-        this.addEventListeners()
+        this.setupWithdrawPopup()
     }
 
     isStartOfYear() {
@@ -136,16 +137,36 @@ class App {
         }
     }
 
-    addEventListeners() {
+    // Add children to the select (in the withdraw popup), adds event listners for all the withdraw functions
+    setupWithdrawPopup() {
         const withdrawPopup = document.getElementById("withdraw-popup")
         const withdrawBtn = document.getElementById("withdraw-button")
         const withdrawClose = document.getElementById("withdraw-close")
+        const selectChildren = document.getElementById("children-select")
+
+        // Show popup
         withdrawBtn.addEventListener("click", function () {
             withdrawPopup.showModal()
         })
+
+        // Hide popup
         withdrawClose.addEventListener("click", function () {
             withdrawPopup.close()
         })
+
+        for (const child of this.#family.children()) {
+            const childOption = document.createElement("option")
+            childOption.value = child.key()
+            childOption.text = child.name()
+
+            selectChildren.append(childOption)
+        }
+
+
+        // go through each child in the family
+        //   - create a OPTION element variable
+        //   - set the OPTION element value to "child.key" and the content to "child.name"
+        //   - insert that element into the HTML in the right place (as a nested element of childrenSelect)
     }
 }
 
