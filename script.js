@@ -96,6 +96,7 @@ class App {
         }
 
         this.renderChildPanels()
+        this.addEventListeners()
     }
 
     isStartOfYear() {
@@ -133,6 +134,18 @@ class App {
             // Add the cloned child element into the children element
             childrenElement.append(clonedChildElememt)
         }
+    }
+
+    addEventListeners() {
+        const withdrawPopup = document.getElementById("withdraw-popup")
+        const withdrawBtn = document.getElementById("withdraw-button")
+        const withdrawClose = document.getElementById("withdraw-close")
+        withdrawBtn.addEventListener("click", function () {
+            withdrawPopup.showModal()
+        })
+        withdrawClose.addEventListener("click", function () {
+            withdrawPopup.close()
+        })
     }
 }
 

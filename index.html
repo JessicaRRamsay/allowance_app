@@ -21,7 +21,10 @@
         </div>
 
         <div class="entries">
-            <div class="entry-box">
+            <!-- <input type="number" id="withdraw-input" placeholder="Enter an amount"> -->
+            <button id="withdraw-button">Withdraw</button>
+
+            <!-- <div class="entry-box">
                 <label>Value spent:</label>
                 <input type="number">
             </div>
@@ -33,20 +36,23 @@
                     <option>Cafe</option>
                     <option>Swimming Pool</option>
                 </select>
-            </div>
+            </div> -->
 
-            <div class="entry-box">
+            <!-- <div class="entry-box">
                 <label>Child:</label>
                 <select>
                     <option>Aubrie</option>
                     <option>Rangi</option>
                     <option>Manaia</option>
                 </select>
-            </div>
-
-            <button class="submit">Submit</button>
+            </div> -->
         </div>
     </main>
+
+    <dialog id="withdraw-popup">
+        <h2>Withdraw from your account</h2>
+        <button id="withdraw-close">Close</button>
+    </dialog>
 
     <script src="script.js"></script>
 </body>
