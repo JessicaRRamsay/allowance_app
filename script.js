@@ -44,7 +44,7 @@ class Family {
     // Get the first child that has the same key as the passed in, or null if not found
     getChildByKey(key) {
         for (const child of this.#children) {
-            if (child.key === key) {
+            if (child.key() === key) {
                 return child
             }
             else { }
@@ -208,14 +208,23 @@ class App {
         event.preventDefault()
         const child = this.getSelectedChild()
 
+        // if no child is selected, show an error message
         if (child === null) {
             this.showWithdrawError("Please select a child")
             return
         }
 
-        // get the selected child
-        //      if no child is selected, show an error message
-        //      stop
+        const withdrawAmountElement = document.getElementById("amount")
+        const withdrawAmountString = withdrawAmountElement.value
+        const childBalance = child.balance()
+        const withdrawAmount = Number(withdrawAmountString)
+
+        if (isNaN(withdrawAmount) || withdrawAmount <= 0) {
+            this.showWithdrawError("Please enter a number")
+            return
+        }
+
+
         // does the child have enough money to withdraw
         // if not, show an error message
         // if they do,
