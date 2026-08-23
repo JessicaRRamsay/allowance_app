@@ -24,7 +24,6 @@ class Family {
     }
 
     loadBalances() {
-        // TODO: load each child's balance from local storage
         for (const child of this.#children) {
             let storageKey = `balance_${child.key()}`
             let savedBalanceString = localStorage.getItem(storageKey)
@@ -40,6 +39,17 @@ class Family {
             localStorage.setItem(storageKey, JSON.stringify(child.balance()))
             console.log(`Saved ${storageKey}`)
         }
+    }
+
+    // Get the first child that has the same key as the passed in, or null if not found
+    getChildByKey(key) {
+        for (const child of this.#children) {
+            if (child.key === key) {
+                return child
+            }
+            else { }
+        }
+        return null
     }
 }
 
@@ -142,7 +152,7 @@ class App {
         const withdrawPopup = document.getElementById("withdraw-popup")
         const withdrawBtn = document.getElementById("withdraw-button")
         const withdrawClose = document.getElementById("withdraw-close")
-        const selectChildren = document.getElementById("children-select")
+        const childrenSelect = document.getElementById("children-select")
         const withdrawSubmit = document.getElementById("withdraw-submit")
 
         // Show popup
@@ -161,21 +171,77 @@ class App {
             childOption.value = child.key()
             childOption.text = child.name()
 
-            selectChildren.append(childOption)
+            childrenSelect.append(childOption)
         }
 
-        withdrawSubmit.addEventListener("click", this.tryToWithdraw)
+        withdrawSubmit.addEventListener("click", this.tryToWithdraw.bind(this))
     }
 
-    tryToWithdraw() {
+    // selectedChildBalance() {
+    //     const selectedChildName = childOption.name
+    //     const selectedChildBal = this.selectedChildName.balance()
+    //     return selectedChildBal
+    // }
 
+    // returns the selected child object, or null if no child is selected
+    getSelectedChild() {
+        const childrenSelect = document.getElementById("children-select")
+        const childKey = childrenSelect.value
 
-        // get select element and call .value or .selected
-        // check if they have enough money to withdraw
-        // make sure they have a child selected if they are withdrawling
+        // if they haven't selected a child
+        if (childKey === "") {
+            return null
+        }
 
+        const selectedChild = this.#family.getChildByKey(childKey)
+        return selectedChild
     }
 
+    showWithdrawError(errorMessage) {
+        const withdrawErrorElement = document.getElementById("withdraw-error")
+        withdrawErrorElement.textContent = errorMessage
+        withdrawErrorElement.hidden = false
+    }
+
+    tryToWithdraw(event) {
+        // stop the form from submitting
+        event.preventDefault()
+        const child = this.getSelectedChild()
+
+        if (child === null) {
+            this.showWithdrawError("Please select a child")
+            return
+        }
+
+        // get the selected child
+        //      if no child is selected, show an error message
+        //      stop
+        // does the child have enough money to withdraw
+        // if not, show an error message
+        // if they do,
+        //      subtract the amount from their balance, 
+        //      save balances to local storage,
+        //      hide the popup, 
+        //      show a confirmation message saying that the money was spent, 
+        //      update the balance on the page
+        //      
+
+
+
+        //     const withdrawAmount = document.getElementById("amount")
+
+        //     if (withdrawAmount < selectedChildBalance())
+        //         return false
+        //     if (childOption.value === null)
+        //         return false
+        //     else
+        //         return true
+
+        //     // get select element and call .value or .selected
+        //     // check if they have enough money to withdraw
+        //     // make sure they have a child selected if they are withdrawling
+
+    }
 }
 
 
