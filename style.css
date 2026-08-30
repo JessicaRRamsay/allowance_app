@@ -105,4 +105,65 @@ dialog::backdrop {
 
 .error {
     color: red;
+    padding-bottom: 10px;
+}
+
+#withdraw-popup {
+    background-color: #d6ddec;
+    font-family: Montserrat;
+    padding: 22px;
+}
+
+#withdraw-popup h2 {
+    color: black;
+    margin-top: 0;
+    text-align: center;
+}
+
+#children-select {
+    font-family: Montserrat;
+    padding: 2px;
+    margin-bottom: 10px;
+    background-color: #fbfdff;
+    border: #5570a4;
+    border-width: 2px;
+    border-radius: 5px;
+}
+
+#amount {
+    font-family: Montserrat;
+    padding: 3px;
+    padding-left: 3px;
+    margin-bottom: 12px;
+    background-color: #fbfdff;
+    border: #5570a4;
+    /* not working */
+    color: black;
+    border-width: 2px;
+    border-radius: 5px;
+}
+
+#amount placeholder {
+    color: black;
+}
+
+#withdraw-submit {
+    font-family: Montserrat;
+    background-color: #5570a4;
+    border-radius: 5px;
+    border: none;
+    padding: 6px;
+    margin-right: 5px;
+    color: #fbfdff;
+    font-size: 14px;
+}
+
+#withdraw-close {
+    font-family: Montserrat;
+    background-color: #5570a4;
+    border: none;
+    border-radius: 5px;
+    padding: 6px;
+    color: #fbfdff;
+    font-size: 14px;
 }

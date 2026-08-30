@@ -73,6 +73,10 @@ class Child {
         this.#balance += amount
     }
 
+    withdraw(amount) {
+        this.#balance -= amount
+    }
+
     name() {
         return this.#name
     }
@@ -134,7 +138,7 @@ class App {
         for (const child of this.#family.children()) {
 
             // Make a copy of the child template's content
-            let clonedChildElememt = childTemplate.content.cloneNode(true)
+            let clonedChildElememt = childTemplate.content.cloneNode(true) // error here with the content
 
             // Set child's name
             clonedChildElememt.querySelector(".child-name").textContent = child.name()
@@ -224,12 +228,32 @@ class App {
             return
         }
 
+        if (childBalance < withdrawAmount) {
+            this.showWithdrawError("Please make sure you have enough balance to withdraw")
+            return
+        }
 
-        // does the child have enough money to withdraw
-        // if not, show an error message
+        // run the withdraw function
+        child.withdraw(withdrawAmount)
+
+        this.#family.saveBalances()
+
+        // close popup
+        const withdrawPopup = document.getElementById("withdraw-popup")
+        withdrawPopup.close()
+
+        // Refresh so the balance updates on the page
+        document.getElementById("children").innerHTML = ""
+
+
+
+        // maybe try to refresh balance-value
+        this.renderChildPanels()
+
+
+
         // if they do,
-        //      subtract the amount from their balance, 
-        //      save balances to local storage,
+
         //      hide the popup, 
         //      show a confirmation message saying that the money was spent, 
         //      update the balance on the page
@@ -237,18 +261,7 @@ class App {
 
 
 
-        //     const withdrawAmount = document.getElementById("amount")
 
-        //     if (withdrawAmount < selectedChildBalance())
-        //         return false
-        //     if (childOption.value === null)
-        //         return false
-        //     else
-        //         return true
-
-        //     // get select element and call .value or .selected
-        //     // check if they have enough money to withdraw
-        //     // make sure they have a child selected if they are withdrawling
 
     }
 }
