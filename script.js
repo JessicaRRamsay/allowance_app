@@ -223,13 +223,18 @@ class App {
         const childBalance = child.balance()
         const withdrawAmount = Number(withdrawAmountString)
 
-        if (isNaN(withdrawAmount) || withdrawAmount <= 0) {
+        if (isNaN(withdrawAmount)) {
             this.showWithdrawError("Please enter a number")
             return
         }
 
         if (childBalance < withdrawAmount) {
             this.showWithdrawError("Please make sure you have enough balance to withdraw")
+            return
+        }
+
+        if (withdrawAmount <= 0) {
+            this.showWithdrawError("Please enter a positive number")
             return
         }
 
@@ -254,13 +259,14 @@ class App {
 
         // if they do,
 
-        //      hide the popup, 
         //      show a confirmation message saying that the money was spent, 
-        //      update the balance on the page
-        //      
+        //      also if they try to withdraw a negative number 
 
 
+        // V2 plan
+        // add more error messages
 
+        // In V2 or V3, clear the popup because once youve opened it once, and do it again the same info is displayed
 
 
     }
