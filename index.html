@@ -16,23 +16,51 @@
 
         <div class="entries">
             <button id="withdraw-button">Withdraw</button>
+            <button id="bonus-button">Select bonus</button>
+            <div class="message" id="withdraw-message" hidden>Withdraw message</div>
         </div>
+
+
     </main>
 
     <dialog id="withdraw-popup">
         <h2>Withdraw from your account</h2>
         <div class="error" id="withdraw-error" hidden>Error message</div>
         <form id="withdraw-form">
-            <label for="children-select">Child</label>
-            <select name="child" id="children-select" required>
+            <label for="withdraw-children-select">Child</label>
+            <select name="child" id="withdraw-children-select" required>
                 <option value="" disabled selected>Choose a child...</option>
             </select>
             <br>
             <label for="amount">Amount</label>
-            <input type="number" id="amount" name="amount" min="0" max="500.00" step="1" placeholder="0.00" required>
+            <input type="number" id="amount" name="amount" min="0" max="500.00" step="0.01" placeholder="0.00" required>
             <br>
             <button type="submit" id="withdraw-submit">Withdraw</button>
             <button id="withdraw-close">Close</button>
+        </form>
+    </dialog>
+
+    <dialog id="bonus-popup">
+        <h2>Select bonus activity!</h2>
+        <div class="error" id="bonus-error" hidden>Bonus error message</div>
+        <form id="bonus-form">
+            <label for="bonus-children-select">Child</label>
+            <select name="child" id="bonus-children-select" required>
+                <option value="" disabled selected>Choose a child...</option>
+            </select>
+            <br>
+            <label for="amount" class="bonus-activity">Bonus activity:</label>
+            <select name="bonus-type" id="bonus-select" required>
+                <option value="" disabled selected>Choose a bonus activity...</option>
+                <option>Coffee and toast cafe</option>
+                <option>Ice creams at waterfront</option>
+                <option>Go to the zoo</option>
+                <option>Go to the beach</option>
+                <option>1 month long trip to Portugal</option>
+            </select>
+            <br>
+            <button type="submit" id="bonus-submit">Select</button>
+            <button id="bonus-close">Close</button>
         </form>
     </dialog>
 
@@ -41,7 +69,7 @@
         <article class="child">
             <h2 class="child-name"></h2>
             <p class="balance">Balance: $<span class="balance-value"></span></p>
-            <p class="bonus">New Years bonus: <span id="bonus"></span></p>
+            <p class="bonus">New Years bonus: <span class="bonus-value"></span></p>
         </article>
     </template>
 

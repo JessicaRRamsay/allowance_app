@@ -72,7 +72,8 @@ main {
     outline: none;
 }
 
-.entries #withdraw-button {
+.entries #withdraw-button,
+.entries #bonus-button {
     background-color: #5570a4;
     color: white;
     border: none;
@@ -82,6 +83,7 @@ main {
     font-size: 16px;
     cursor: pointer;
 }
+
 
 option {
     font-family: Montserrat;
@@ -108,19 +110,26 @@ dialog::backdrop {
     padding-bottom: 10px;
 }
 
-#withdraw-popup {
+.message {
+    color: black;
+}
+
+#withdraw-popup,
+#bonus-popup {
     background-color: #d6ddec;
     font-family: Montserrat;
     padding: 22px;
 }
 
-#withdraw-popup h2 {
+#withdraw-popup h2,
+#bonus-popup h2 {
     color: black;
     margin-top: 0;
     text-align: center;
 }
 
-#children-select {
+#children-select,
+#bonus-select {
     font-family: Montserrat;
     padding: 2px;
     margin-bottom: 10px;
@@ -128,6 +137,10 @@ dialog::backdrop {
     border: #5570a4;
     border-width: 2px;
     border-radius: 5px;
+}
+
+#bonus-select {
+    margin-top: 10px;
 }
 
 #amount {
@@ -143,11 +156,12 @@ dialog::backdrop {
     border-radius: 5px;
 }
 
-#amount placeholder {
+#amount::placeholder {
     color: black;
 }
 
-#withdraw-submit {
+#withdraw-submit,
+#bonus-submit {
     font-family: Montserrat;
     background-color: #5570a4;
     border-radius: 5px;
@@ -158,7 +172,8 @@ dialog::backdrop {
     font-size: 14px;
 }
 
-#withdraw-close {
+#withdraw-close,
+#bonus-close {
     font-family: Montserrat;
     background-color: #5570a4;
     border: none;

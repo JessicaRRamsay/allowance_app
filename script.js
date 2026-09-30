@@ -95,9 +95,17 @@ class App {
     // Private variables
     #family
 
+    // Common elements
+    #bonusChildrenSelect
+    #withdrawChildrenSelect
+    #withdrawSubmit
+
     // Creates a new app object
     constructor() {
         this.#family = new Family(500) // $500 is the annual allowance
+        this.#bonusChildrenSelect = this.getElementById('bonus-children-select')
+        this.#withdrawChildrenSelect = this.getElementById("withdraw-children-select")
+        this.#withdrawSubmit = this.getElementById("withdraw-submit")
     }
 
     // This is the apps start up function
@@ -112,6 +120,7 @@ class App {
 
         this.renderChildPanels()
         this.setupWithdrawPopup()
+        this.setupBonusPopup()
     }
 
     isStartOfYear() {
@@ -138,16 +147,31 @@ class App {
         for (const child of this.#family.children()) {
 
             // Make a copy of the child template's content
-            let clonedChildElememt = childTemplate.content.cloneNode(true) // error here with the content
+            let clonedChildElement = childTemplate.content.cloneNode(true) // error here with the content
 
             // Set child's name
-            clonedChildElememt.querySelector(".child-name").textContent = child.name()
+            clonedChildElement.querySelector(".child-name").textContent = child.name()
 
             // Set child's balance
-            clonedChildElememt.querySelector(".balance-value").textContent = child.balance()
+            clonedChildElement.querySelector(".balance-value").textContent = child.balance()
+
+            // Checks if child is able to get bonus
+            let bonusStatus = child.balance() > 40 ? "On target" : "No bonus";
+
+            if (bonusStatus === "On target") {
+                // make text colour green
+            }
+
+            if (bonusStatus === "No bonus") {
+                // make text colour red
+            }
+
+            // Puts the bonus status message on the child cards
+            clonedChildElement.querySelector(".bonus-value").textContent = bonusStatus;
+
 
             // Add the cloned child element into the children element
-            childrenElement.append(clonedChildElememt)
+            childrenElement.append(clonedChildElement)
         }
     }
 
@@ -156,16 +180,16 @@ class App {
         const withdrawPopup = document.getElementById("withdraw-popup")
         const withdrawBtn = document.getElementById("withdraw-button")
         const withdrawClose = document.getElementById("withdraw-close")
-        const childrenSelect = document.getElementById("children-select")
-        const withdrawSubmit = document.getElementById("withdraw-submit")
 
         // Show popup
-        withdrawBtn.addEventListener("click", function () {
+        withdrawBtn.addEventListener("click", function (event) {
+            event.preventDefault()
             withdrawPopup.showModal()
         })
 
         // Hide popup
-        withdrawClose.addEventListener("click", function () {
+        withdrawClose.addEventListener("click", function (event) {
+            event.preventDefault()
             withdrawPopup.close()
         })
 
@@ -175,21 +199,60 @@ class App {
             childOption.value = child.key()
             childOption.text = child.name()
 
-            childrenSelect.append(childOption)
+            this.#withdrawChildrenSelect.append(childOption)
         }
 
-        withdrawSubmit.addEventListener("click", this.tryToWithdraw.bind(this))
+        this.#withdrawSubmit.addEventListener("click", this.tryToWithdraw.bind(this))
     }
 
-    // selectedChildBalance() {
-    //     const selectedChildName = childOption.name
-    //     const selectedChildBal = this.selectedChildName.balance()
-    //     return selectedChildBal
-    // }
+    setupBonusPopup() {
+        const bonusPopup = document.getElementById("bonus-popup")
+        const bonusBtn = document.getElementById("bonus-button")
+        const bonusClose = document.getElementById("bonus-close")
+        const bonusSubmit = document.getElementById("bonus-submit")
+
+        // Show popup
+        bonusBtn.addEventListener("click", function (event) {
+            event.preventDefault()
+            bonusPopup.showModal()
+        })
+
+        // Hide popup
+        bonusClose.addEventListener("click", function (event) {
+            event.preventDefault()
+            bonusPopup.close()
+        })
+
+        // Adds the children to dropdown menu when withdrawing
+        for (const child of this.#family.children()) {
+            const bonusChildOption = document.createElement("option")
+            bonusChildOption.value = child.key()
+            bonusChildOption.text = child.name()
+            this.#bonusChildrenSelect.append(bonusChildOption)
+        }
+
+        bonusSubmit.addEventListener("click", this.tryToSelectBonus.bind(this))
+    }
+
+    tryToSelectBonus(event) {
+        event.preventDefault()
+
+        const bonusChildKey = this.#bonusChildrenSelect.value
+
+        const child = this.#family.getChildByKey(bonusChildKey)
+        const childBalance = child.balance()
+
+        if (childBalance > 40) {
+            return
+        }
+    }
+    // get bonus children select - done
+    // get value off it (what child is it) - done
+    // call family.getChildByKey or smth
+    // Then see how much money the childs got
 
     // returns the selected child object, or null if no child is selected
-    getSelectedChild() {
-        const childrenSelect = document.getElementById("children-select")
+    getSelectedChild(childrenSelect) {
         const childKey = childrenSelect.value
 
         // if they haven't selected a child
@@ -207,10 +270,16 @@ class App {
         withdrawErrorElement.hidden = false
     }
 
+    showWithdrawMessage(withdrawMessage) {
+        const withdrawMessageElement = document.getElementById("withdraw-message")
+        withdrawMessageElement.textContent = withdrawMessage
+        withdrawMessageElement.hidden = false
+    }
+
     tryToWithdraw(event) {
         // stop the form from submitting
         event.preventDefault()
-        const child = this.getSelectedChild()
+        const child = this.getSelectedChild(this.#withdrawChildrenSelect)
 
         // if no child is selected, show an error message
         if (child === null) {
@@ -251,25 +320,28 @@ class App {
         document.getElementById("children").innerHTML = ""
 
 
-
         // maybe try to refresh balance-value
         this.renderChildPanels()
 
-
-
-        // if they do,
-
-        //      show a confirmation message saying that the money was spent, 
-        //      also if they try to withdraw a negative number 
-
-
-        // V2 plan
-        // add more error messages
+        let message = `You have withdrawed $${withdrawAmount} from ${child.name()}`
+        this.showWithdrawMessage(message)
 
         // In V2 or V3, clear the popup because once youve opened it once, and do it again the same info is displayed
 
 
     }
+
+    // Returns element with the supplied id, or prints a console error if not found
+    getElementById(id) {
+        const element = document.getElementById(id)
+
+        if (!element) {
+            console.error("Can't find element", "id", id)
+        }
+
+        return element
+    }
+
 }
 
 
