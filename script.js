@@ -41,7 +41,27 @@ class Family {
         }
     }
 
+    saveBonuses() {
+        for (const child of this.#children) {
+            let storageKey = `bonus_${child.key()}`
+            localStorage.setItem(storageKey, JSON.stringify(child.bonusActivity()))
+            console.log(`Saved ${storageKey}: ${child.bonusActivity()}`)
+        }
+    }
+
+    loadBonuses() {
+        for (const child of this.#children) {
+            let storageKey = `bonus_${child.key()}`
+            let savedBonusString = localStorage.getItem(storageKey)
+            if (savedBonusString) {
+                let savedBonus = JSON.parse(savedBonusString)
+                child.restoreBonusActivity(savedBonus)
+            }
+        }
+    }
+
     // Get the first child that has the same key as the passed in, or null if not found
+
     getChildByKey(key) {
         for (const child of this.#children) {
             if (child.key() === key) {
@@ -58,6 +78,7 @@ class Child {
     #balance = 0
     #name
     #key
+    #bonusActivity = "None" // Default activity
 
     // Creates a new child object
     constructor(name, key) {
@@ -67,6 +88,20 @@ class Child {
 
     balance() {
         return this.#balance
+    }
+
+    bonusActivity() {
+        return this.#bonusActivity
+    }
+
+    setBonusActivity(activity) {
+        this.#bonusActivity = activity
+    }
+
+    restoreBonusActivity(savedActivity) {
+        if (savedActivity) {
+            this.#bonusActivity = savedActivity
+        }
     }
 
     deposit(amount) {
@@ -113,9 +148,11 @@ class App {
         if (this.isStartOfYear()) {
             this.#family.depositAnnualAllowance()
             this.#family.saveBalances()
+            this.#family.saveBonuses()
         }
         else {
             this.#family.loadBalances()
+            this.#family.loadBonuses()
         }
 
         this.renderChildPanels()
@@ -258,6 +295,12 @@ class App {
             return
         }
 
+        // Update the child object with the chosen activity
+        child.setBonusActivity(bonusActivity)
+
+        // Saves bonuses to local storage
+        this.#family.saveBonuses()
+
         console.log(`${child.name()}'s balance is $${childBalance} - Approved for: ${bonusActivity}`)
 
         let message = `You have selected "${bonusActivity}" for ${child.name()}!`
@@ -274,10 +317,6 @@ class App {
         // Refresh panels
         document.getElementById("children").innerHTML = ""
         this.renderChildPanels()
-
-        // error messages/checking if valid
-        // save bonus to local storage
-        // Show message on which bonus is saved???
     }
 
     showBonusError(bonusErrorMessage) {
