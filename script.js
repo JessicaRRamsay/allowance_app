@@ -234,22 +234,63 @@ class App {
         bonusSubmit.addEventListener("click", this.tryToSelectBonus.bind(this))
     }
 
+    // Checks if child has enough balance to receive bonus
     tryToSelectBonus(event) {
-        event.preventDefault()
+        event.preventDefault() // Stops the form from submitting
 
-        const bonusChildKey = this.#bonusChildrenSelect.value
-
-        const child = this.#family.getChildByKey(bonusChildKey)
-        const childBalance = child.balance()
-
-        if (childBalance > 40) {
+        const child = this.getSelectedChild(this.#bonusChildrenSelect)
+        if (!child) {
+            console.log("No child selected")
             return
         }
+
+        const bonusSelect = document.getElementById("bonus-select")
+        const bonusActivity = bonusSelect.value
+        if (!bonusActivity) {
+            this.showBonusError("Please select a bonus activity")
+            return
+        }
+
+        const childBalance = child.balance() // Gets childs balance
+        // Checks if the child qualifies for the bonus
+        if (childBalance < 40) {
+            this.showBonusError(`${child.name()} needs at least $40 balance to select a bonus`)
+            return
+        }
+
+        console.log(`${child.name()}'s balance is $${childBalance} - Approved for: ${bonusActivity}`)
+
+        let message = `You have selected "${bonusActivity}" for ${child.name()}!`
+        this.showBonusMessage(message)
+
+        // Hides previous errors that may have been showing
+        const bonusErrorElement = document.getElementById("bonus-error")
+        if (bonusErrorElement) bonusErrorElement.hidden = true
+
+        // closes popup
+        const bonusPopup = document.getElementById("bonus-popup")
+        bonusPopup.close()
+
+        // Refresh panels
+        document.getElementById("children").innerHTML = ""
+        this.renderChildPanels()
+
+        // error messages/checking if valid
+        // save bonus to local storage
+        // Show message on which bonus is saved???
     }
-    // get bonus children select - done
-    // get value off it (what child is it) - done
-    // call family.getChildByKey or smth
-    // Then see how much money the childs got
+
+    showBonusError(bonusErrorMessage) {
+        const bonusErrorElement = document.getElementById("bonus-error")
+        bonusErrorElement.textContent = bonusErrorMessage
+        bonusErrorElement.hidden = false
+    }
+
+    showBonusMessage(bonusMessage) {
+        const bonusMessageElement = document.getElementById("bonus-message")
+        bonusMessageElement.textContent = bonusMessage
+        bonusMessageElement.hidden = false
+    }
 
     // returns the selected child object, or null if no child is selected
     getSelectedChild(childrenSelect) {

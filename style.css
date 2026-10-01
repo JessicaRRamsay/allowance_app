@@ -143,6 +143,11 @@ dialog::backdrop {
     margin-top: 10px;
 }
 
+#bonus-children-select,
+#withdraw-children-select {
+    margin-bottom: 10px;
+}
+
 #amount {
     font-family: Montserrat;
     padding: 3px;
