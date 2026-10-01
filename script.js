@@ -192,15 +192,16 @@ class App {
             // Set child's balance
             clonedChildElement.querySelector(".balance-value").textContent = child.balance()
 
+            let bonusValueElement = clonedChildElement.querySelector(".bonus-value")
+
             // Checks if child is able to get bonus
             let bonusStatus = child.balance() > 40 ? "On target" : "No bonus";
 
+            // Making the bonus red/green on child panels
             if (bonusStatus === "On target") {
-                // make text colour green
-            }
-
-            if (bonusStatus === "No bonus") {
-                // make text colour red
+                bonusValueElement.classList.add("bonus-on-target")
+            } else {
+                bonusValueElement.classList.add("no-bonus")
             }
 
             // Puts the bonus status message on the child cards
@@ -251,6 +252,8 @@ class App {
         // Show popup
         bonusBtn.addEventListener("click", function (event) {
             event.preventDefault()
+            document.getElementById("bonus-error").hidden = true
+            document.getElementById("bonus-message").hidden = true
             bonusPopup.showModal()
         })
 
@@ -275,12 +278,14 @@ class App {
     tryToSelectBonus(event) {
         event.preventDefault() // Stops the form from submitting
 
+        // Check if a child is selected
         const child = this.getSelectedChild(this.#bonusChildrenSelect)
         if (!child) {
-            console.log("No child selected")
+            this.showBonusError("Please select a child")
             return
         }
 
+        // Check if a bonus activity is selected
         const bonusSelect = document.getElementById("bonus-select")
         const bonusActivity = bonusSelect.value
         if (!bonusActivity) {
@@ -288,8 +293,9 @@ class App {
             return
         }
 
+        // Check if child has enough balance to qualify for bonus
         const childBalance = child.balance() // Gets childs balance
-        // Checks if the child qualifies for the bonus
+        // Checks if the child has more than $40 balance
         if (childBalance < 40) {
             this.showBonusError(`${child.name()} needs at least $40 balance to select a bonus`)
             return
@@ -301,8 +307,7 @@ class App {
         // Saves bonuses to local storage
         this.#family.saveBonuses()
 
-        console.log(`${child.name()}'s balance is $${childBalance} - Approved for: ${bonusActivity}`)
-
+        // Sucsessful message
         let message = `You have selected "${bonusActivity}" for ${child.name()}!`
         this.showBonusMessage(message)
 
@@ -313,6 +318,9 @@ class App {
         // closes popup
         const bonusPopup = document.getElementById("bonus-popup")
         bonusPopup.close()
+
+        // refreshes bonus popup
+        document.getElementById("bonus-form").reset()
 
         // Refresh panels
         document.getElementById("children").innerHTML = ""

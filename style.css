@@ -187,3 +187,11 @@ dialog::backdrop {
     color: #fbfdff;
     font-size: 14px;
 }
+
+.bonus-on-target {
+    color: #2e7d32;
+}
+
+.no-bonus {
+    color: #d32f2f;
+}
