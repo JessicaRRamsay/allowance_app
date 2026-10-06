@@ -61,13 +61,11 @@ class Family {
     }
 
     // Get the first child that has the same key as the passed in, or null if not found
-
     getChildByKey(key) {
         for (const child of this.#children) {
             if (child.key() === key) {
                 return child
             }
-            else { }
         }
         return null
     }
@@ -130,6 +128,10 @@ class App {
     // Private variables
     #family
 
+    #minBonusBalance = 40
+    #annualAllowance = 500 // $500 is the annual allowance
+
+
     // Common elements
     #bonusChildrenSelect
     #withdrawChildrenSelect
@@ -137,14 +139,16 @@ class App {
 
     // Creates a new app object
     constructor() {
-        this.#family = new Family(500) // $500 is the annual allowance
-        this.#bonusChildrenSelect = this.getElementById('bonus-children-select')
-        this.#withdrawChildrenSelect = this.getElementById("withdraw-children-select")
-        this.#withdrawSubmit = this.getElementById("withdraw-submit")
+        this.#family = new Family(this.#annualAllowance)
+
     }
 
     // This is the apps start up function
     start() {
+        this.#bonusChildrenSelect = this.getElementById('bonus-children-select')
+        this.#withdrawChildrenSelect = this.getElementById("withdraw-children-select")
+        this.#withdrawSubmit = this.getElementById("withdraw-submit")
+
         if (this.isStartOfYear()) {
             this.#family.depositAnnualAllowance()
             this.#family.saveBalances()
@@ -190,12 +194,12 @@ class App {
             clonedChildElement.querySelector(".child-name").textContent = child.name()
 
             // Set child's balance
-            clonedChildElement.querySelector(".balance-value").textContent = child.balance()
+            clonedChildElement.querySelector(".balance-value").textContent = child.balance().toFixed(2)
 
             let bonusValueElement = clonedChildElement.querySelector(".bonus-value")
 
             // Checks if child is able to get bonus
-            let bonusStatus = child.balance() > 40 ? "On target" : "No bonus";
+            let bonusStatus = child.balance() > this.#minBonusBalance ? "On target" : "No bonus";
 
             // Making the bonus red/green on child panels
             if (bonusStatus === "On target") {
@@ -253,7 +257,10 @@ class App {
         bonusBtn.addEventListener("click", function (event) {
             event.preventDefault()
             document.getElementById("bonus-error").hidden = true
-            document.getElementById("bonus-message").hidden = true
+            const statusMessage = document.getElementById("status-message")
+            if (statusMessage) {
+                statusMessage.hidden = true
+            }
             bonusPopup.showModal()
         })
 
@@ -295,9 +302,10 @@ class App {
 
         // Check if child has enough balance to qualify for bonus
         const childBalance = child.balance() // Gets childs balance
+
         // Checks if the child has more than $40 balance
-        if (childBalance < 40) {
-            this.showBonusError(`${child.name()} needs at least $40 balance to select a bonus`)
+        if (childBalance <= this.#minBonusBalance) {
+            this.showBonusError(`${child.name()} needs more than $40 balance to select a bonus`)
             return
         }
 
@@ -309,7 +317,7 @@ class App {
 
         // Sucsessful message
         let message = `You have selected "${bonusActivity}" for ${child.name()}!`
-        this.showBonusMessage(message)
+        this.showMessage(message)
 
         // Hides previous errors that may have been showing
         const bonusErrorElement = document.getElementById("bonus-error")
@@ -333,12 +341,6 @@ class App {
         bonusErrorElement.hidden = false
     }
 
-    showBonusMessage(bonusMessage) {
-        const bonusMessageElement = document.getElementById("bonus-message")
-        bonusMessageElement.textContent = bonusMessage
-        bonusMessageElement.hidden = false
-    }
-
     // returns the selected child object, or null if no child is selected
     getSelectedChild(childrenSelect) {
         const childKey = childrenSelect.value
@@ -358,10 +360,10 @@ class App {
         withdrawErrorElement.hidden = false
     }
 
-    showWithdrawMessage(withdrawMessage) {
-        const withdrawMessageElement = document.getElementById("withdraw-message")
-        withdrawMessageElement.textContent = withdrawMessage
-        withdrawMessageElement.hidden = false
+    showMessage(text) {
+        const messageElement = document.getElementById("status-message")
+        messageElement.textContent = text
+        messageElement.hidden = false
     }
 
     tryToWithdraw(event) {
@@ -376,14 +378,20 @@ class App {
         }
 
         const withdrawAmountElement = document.getElementById("amount")
-        const withdrawAmountString = withdrawAmountElement.value
-        const childBalance = child.balance()
-        const withdrawAmount = Number(withdrawAmountString)
+        const rawAmount = parseFloat(withdrawAmountElement.value)
 
-        if (isNaN(withdrawAmount)) {
+        if (isNaN(rawAmount)) {
             this.showWithdrawError("Please enter a number")
             return
         }
+
+        if (rawAmount <= 0) {
+            this.showWithdrawError("Please enter a positive number")
+            return
+        }
+
+        const withdrawAmount = Number(rawAmount.toFixed(2))
+        const childBalance = child.balance()
 
         if (childBalance < withdrawAmount) {
             this.showWithdrawError("Please make sure you have enough balance to withdraw")
@@ -398,6 +406,11 @@ class App {
         // run the withdraw function
         child.withdraw(withdrawAmount)
 
+        if (child.balance() <= this.#minBonusBalance) {
+            child.setBonusActivity("None")
+            this.#family.saveBonuses()
+        }
+
         this.#family.saveBalances()
 
         // close popup
@@ -408,15 +421,13 @@ class App {
         document.getElementById("children").innerHTML = ""
 
 
-        // maybe try to refresh balance-value
         this.renderChildPanels()
 
-        let message = `You have withdrawed $${withdrawAmount} from ${child.name()}`
-        this.showWithdrawMessage(message)
+        // Sucsessful message
+        let message = `You have withdrawn $${withdrawAmount} from ${child.name()}`
+        this.showMessage(message)
 
         // In V2 or V3, clear the popup because once youve opened it once, and do it again the same info is displayed
-
-
     }
 
     // Returns element with the supplied id, or prints a console error if not found

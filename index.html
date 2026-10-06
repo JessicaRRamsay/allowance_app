@@ -10,6 +10,7 @@
 
 <body>
     <main>
+        <h1>Family reward tracker</h1>
         <div class="children-display" id="children">
 
         </div>
@@ -17,8 +18,7 @@
         <div class="entries">
             <button id="withdraw-button">Withdraw</button>
             <button id="bonus-button">Select bonus</button>
-            <div class="message" id="withdraw-message" hidden>Withdraw message</div>
-            <div class="message" id="bonus-message" hidden>Bonus message</div>
+            <div class="message" id="status-message" hidden></div>
 
         </div>
 
@@ -51,7 +51,7 @@
                 <option value="" disabled selected>Choose a child...</option>
             </select>
             <br>
-            <label for="amount" class="bonus-activity">Bonus activity:</label>
+            <label for="bonus-select" class="bonus-activity">Bonus activity:</label>
             <select name="bonus-type" id="bonus-select" required>
                 <option value="" disabled selected>Choose a bonus activity...</option>
                 <option>Coffee and toast cafe</option>
