@@ -226,6 +226,8 @@ class App {
         // Show popup
         withdrawBtn.addEventListener("click", function (event) {
             event.preventDefault()
+            document.getElementById("withdraw-form").reset()
+            document.getElementById("withdraw-error").hidden = true
             withdrawPopup.showModal()
         })
 
@@ -256,6 +258,7 @@ class App {
         // Show popup
         bonusBtn.addEventListener("click", function (event) {
             event.preventDefault()
+            document.getElementById("bonus-form").reset()
             document.getElementById("bonus-error").hidden = true
             const statusMessage = document.getElementById("status-message")
             if (statusMessage) {
@@ -426,8 +429,6 @@ class App {
         // Sucsessful message
         let message = `You have withdrawn $${withdrawAmount} from ${child.name()}`
         this.showMessage(message)
-
-        // In V2 or V3, clear the popup because once youve opened it once, and do it again the same info is displayed
     }
 
     // Returns element with the supplied id, or prints a console error if not found
