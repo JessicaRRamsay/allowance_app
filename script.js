@@ -1,8 +1,10 @@
+// Class to manage family data and child objects
 class Family {
     // Private variables
     #startingBudget
     #children
 
+    // Sets starting budget and creates child accounts
     constructor(startingBudget) {
         this.#startingBudget = startingBudget
         this.#children = [
@@ -12,17 +14,19 @@ class Family {
         ]
     }
 
+    // Returns array of all child objects
     children() {
         return this.#children
     }
 
-    // Deposits the children's annual allowance
+    // Deposits starting allowance to every child
     depositAnnualAllowance() {
         for (const child of this.#children) {
             child.deposit(this.#startingBudget)
         }
     }
 
+    // Restores child balances from local storage
     loadBalances() {
         for (const child of this.#children) {
             let storageKey = `balance_${child.key()}`
@@ -33,6 +37,7 @@ class Family {
         }
     }
 
+    // Saves child balances to local storage
     saveBalances() {
         for (const child of this.#children) {
             let storageKey = `balance_${child.key()}`
@@ -41,6 +46,7 @@ class Family {
         }
     }
 
+    // Saves selected bonus activities to local storage
     saveBonuses() {
         for (const child of this.#children) {
             let storageKey = `bonus_${child.key()}`
@@ -49,6 +55,7 @@ class Family {
         }
     }
 
+    // Loads saved bonus activities from local storage
     loadBonuses() {
         for (const child of this.#children) {
             let storageKey = `bonus_${child.key()}`
@@ -60,7 +67,7 @@ class Family {
         }
     }
 
-    // Get the first child that has the same key as the passed in, or null if not found
+    // Returns matching child object by key, or null if not found
     getChildByKey(key) {
         for (const child of this.#children) {
             if (child.key() === key) {
@@ -71,6 +78,7 @@ class Family {
     }
 }
 
+// Class to handle child data and balance changes
 class Child {
     // I have made the balance private to avoid unwanted additions 
     #balance = 0
@@ -78,52 +86,61 @@ class Child {
     #key
     #bonusActivity = "None" // Default activity
 
-    // Creates a new child object
+    // Sets child's name and key
     constructor(name, key) {
         this.#name = name
         this.#key = key
     }
 
+    // Returns balance
     balance() {
         return this.#balance
     }
 
+    // Returns bonus activity
     bonusActivity() {
         return this.#bonusActivity
     }
 
+    // Sets a new bonus activity
     setBonusActivity(activity) {
         this.#bonusActivity = activity
     }
 
+    // Restores saved bonus activity (if there is one)
     restoreBonusActivity(savedActivity) {
         if (savedActivity) {
             this.#bonusActivity = savedActivity
         }
     }
 
+    // Adds money to balance
     deposit(amount) {
         this.#balance += amount
     }
 
+    // Subtracts money from balance
     withdraw(amount) {
         this.#balance -= amount
     }
 
+    // Returns child's name
     name() {
         return this.#name
     }
 
+    // Returns child's key
     key() {
         return this.#key
     }
 
+    // Restores balance loaded from local storage
     restoreBalance(localStorageBalance) {
         this.#balance = localStorageBalance
     }
 }
 
-// Do all the HTML interaction
+// Main application class handling HTML interaction
 class App {
     // Private variables
     #family
@@ -137,7 +154,7 @@ class App {
     #withdrawChildrenSelect
     #withdrawSubmit
 
-    // Creates a new app object
+    // Starts app with starting allowance
     constructor() {
         this.#family = new Family(this.#annualAllowance)
 
@@ -149,6 +166,7 @@ class App {
         this.#withdrawChildrenSelect = this.getElementById("withdraw-children-select")
         this.#withdrawSubmit = this.getElementById("withdraw-submit")
 
+        // Deposit initial allowance when app is first opened, otherwise load saved data
         if (this.isStartOfYear()) {
             this.#family.depositAnnualAllowance()
             this.#family.saveBalances()
@@ -164,6 +182,7 @@ class App {
         this.setupBonusPopup()
     }
 
+    // Checks if app is opened for the first time by checking if balance exists in local storage
     isStartOfYear() {
         let firstChild = this.#family.children()[0]
         let storageKey = `balance_${firstChild.key()}`
@@ -178,6 +197,7 @@ class App {
         }
     }
 
+    // Renders child panels into app
     renderChildPanels() {
         // Get the child panel template
         let childTemplate = document.getElementById("child-template")
@@ -188,7 +208,7 @@ class App {
         for (const child of this.#family.children()) {
 
             // Make a copy of the child template's content
-            let clonedChildElement = childTemplate.content.cloneNode(true) // error here with the content
+            let clonedChildElement = childTemplate.content.cloneNode(true)
 
             // Set child's name
             clonedChildElement.querySelector(".child-name").textContent = child.name()
@@ -217,13 +237,13 @@ class App {
         }
     }
 
-    // Add children to the select (in the withdraw popup), adds event listners for all the withdraw functions
+    // Sets up withdrawal popup controls and fills child select dropdown
     setupWithdrawPopup() {
         const withdrawPopup = document.getElementById("withdraw-popup")
         const withdrawBtn = document.getElementById("withdraw-button")
         const withdrawClose = document.getElementById("withdraw-close")
 
-        // Show popup
+        // Open withdrawal popup and reset inputs
         withdrawBtn.addEventListener("click", function (event) {
             event.preventDefault()
             document.getElementById("withdraw-form").reset()
@@ -231,13 +251,13 @@ class App {
             withdrawPopup.showModal()
         })
 
-        // Hide popup
+        // Close popup
         withdrawClose.addEventListener("click", function (event) {
             event.preventDefault()
             withdrawPopup.close()
         })
 
-        // Adds the children to dropdown menu when withdrawling
+        // Adds the children options to dropdown menu
         for (const child of this.#family.children()) {
             const childOption = document.createElement("option")
             childOption.value = child.key()
@@ -249,13 +269,14 @@ class App {
         this.#withdrawSubmit.addEventListener("click", this.tryToWithdraw.bind(this))
     }
 
+    // Sets up bonus selection popup controls and fills child select dropdown
     setupBonusPopup() {
         const bonusPopup = document.getElementById("bonus-popup")
         const bonusBtn = document.getElementById("bonus-button")
         const bonusClose = document.getElementById("bonus-close")
         const bonusSubmit = document.getElementById("bonus-submit")
 
-        // Show popup
+        // Open bonus popup and clear form/messages
         bonusBtn.addEventListener("click", function (event) {
             event.preventDefault()
             document.getElementById("bonus-form").reset()
@@ -267,13 +288,13 @@ class App {
             bonusPopup.showModal()
         })
 
-        // Hide popup
+        // Close bonus popup
         bonusClose.addEventListener("click", function (event) {
             event.preventDefault()
             bonusPopup.close()
         })
 
-        // Adds the children to dropdown menu when withdrawing
+        // Adds the children to dropdown menu
         for (const child of this.#family.children()) {
             const bonusChildOption = document.createElement("option")
             bonusChildOption.value = child.key()
@@ -284,7 +305,7 @@ class App {
         bonusSubmit.addEventListener("click", this.tryToSelectBonus.bind(this))
     }
 
-    // Checks if child has enough balance to receive bonus
+    // Validates and processes bonus selection
     tryToSelectBonus(event) {
         event.preventDefault() // Stops the form from submitting
 
@@ -306,9 +327,9 @@ class App {
         // Check if child has enough balance to qualify for bonus
         const childBalance = child.balance() // Gets childs balance
 
-        // Checks if the child has more than $40 balance
+        // Checks if the child balance qualifies for bonus
         if (childBalance <= this.#minBonusBalance) {
-            this.showBonusError(`${child.name()} needs more than $40 balance to select a bonus`)
+            this.showBonusError(`${child.name()} needs more than $${this.#minBonusBalance} balance to select a bonus`)
             return
         }
 
@@ -338,17 +359,18 @@ class App {
         this.renderChildPanels()
     }
 
+    // Displays error message in bonus popup
     showBonusError(bonusErrorMessage) {
         const bonusErrorElement = document.getElementById("bonus-error")
         bonusErrorElement.textContent = bonusErrorMessage
         bonusErrorElement.hidden = false
     }
 
-    // returns the selected child object, or null if no child is selected
+    // returns the selected child object from dropdown
     getSelectedChild(childrenSelect) {
         const childKey = childrenSelect.value
 
-        // if they haven't selected a child
+        // if they haven't selected a child return null
         if (childKey === "") {
             return null
         }
@@ -357,24 +379,27 @@ class App {
         return selectedChild
     }
 
+    // Displays error message in withdraw popup
     showWithdrawError(errorMessage) {
         const withdrawErrorElement = document.getElementById("withdraw-error")
         withdrawErrorElement.textContent = errorMessage
         withdrawErrorElement.hidden = false
     }
 
+    // Displays success message on page
     showMessage(text) {
         const messageElement = document.getElementById("status-message")
         messageElement.textContent = text
         messageElement.hidden = false
     }
 
+    // Validates inputs and runs withdrawal function
     tryToWithdraw(event) {
         // stop the form from submitting
         event.preventDefault()
         const child = this.getSelectedChild(this.#withdrawChildrenSelect)
 
-        // if no child is selected, show an error message
+        // Check if a child is selected
         if (child === null) {
             this.showWithdrawError("Please select a child")
             return
@@ -383,11 +408,13 @@ class App {
         const withdrawAmountElement = document.getElementById("amount")
         const rawAmount = parseFloat(withdrawAmountElement.value)
 
+        // Check if a valid number is entered
         if (isNaN(rawAmount)) {
             this.showWithdrawError("Please enter a number")
             return
         }
 
+        // Check if the number is positive
         if (rawAmount <= 0) {
             this.showWithdrawError("Please enter a positive number")
             return
@@ -396,6 +423,7 @@ class App {
         const withdrawAmount = Number(rawAmount.toFixed(2))
         const childBalance = child.balance()
 
+        // Check if the child has enough balance
         if (childBalance < withdrawAmount) {
             this.showWithdrawError("Please make sure you have enough balance to withdraw")
             return
@@ -409,6 +437,7 @@ class App {
         // run the withdraw function
         child.withdraw(withdrawAmount)
 
+        // Set bonus to no bonus if balance falls below minimum amount
         if (child.balance() <= this.#minBonusBalance) {
             child.setBonusActivity("None")
             this.#family.saveBonuses()
@@ -426,7 +455,7 @@ class App {
 
         this.renderChildPanels()
 
-        // Sucsessful message
+        // Sucsessful/confrimation message
         let message = `You have withdrawn $${withdrawAmount} from ${child.name()}`
         this.showMessage(message)
     }
@@ -445,10 +474,6 @@ class App {
 }
 
 
-
-
-
-
-
+// Launches app
 new App(document).start();
 

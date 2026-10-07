@@ -10,11 +10,13 @@
 
 <body>
     <main>
+        <!-- Page title -->
         <h1>Family reward tracker</h1>
-        <div class="children-display" id="children">
 
-        </div>
+        <!-- Container where JS loads the child cards -->
+        <div class="children-display" id="children"></div>
 
+        <!-- Main action buttons and feedback message -->
         <div class="entries">
             <button id="withdraw-button">Withdraw</button>
             <button id="bonus-button">Select bonus</button>
@@ -25,6 +27,7 @@
 
     </main>
 
+    <!-- Popup for withdrawing money -->
     <dialog id="withdraw-popup">
         <h2>Withdraw from your account</h2>
         <div class="error" id="withdraw-error" hidden>Error message</div>
@@ -42,6 +45,7 @@
         </form>
     </dialog>
 
+    <!-- Popup for selecting a bonus activity -->
     <dialog id="bonus-popup">
         <h2>Select bonus activity!</h2>
         <div class="error" id="bonus-error" hidden>Bonus error message</div>
@@ -66,7 +70,7 @@
         </form>
     </dialog>
 
-    <!-- Child card template -->
+    <!-- Structure for each child's display card -->
     <template id="child-template">
         <article class="child">
             <h2 class="child-name"></h2>
