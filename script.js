@@ -1,6 +1,9 @@
-// Class to manage family data and child objects
+/* Family class:
+Manages all family data and child objects in one central place.
+This class keeps track of all the children together so that actions affecting everyone (like giving annual allowances, 
+or saving and loading data) can be done easily for the whole family at once. */
 class Family {
-    // Private variables
+    // Private variables keep important budget and child data protected so other code outside class cannot accidentally change or delete it.    
     #startingBudget
     #children
 
@@ -26,7 +29,8 @@ class Family {
         }
     }
 
-    // Restores child balances from local storage
+    // Loads saved balances from local storage for each child.
+    // This makes sure money isn't lost when the webpage is refreshed.    
     loadBalances() {
         for (const child of this.#children) {
             let storageKey = `balance_${child.key()}`
@@ -37,7 +41,8 @@ class Family {
         }
     }
 
-    // Saves child balances to local storage
+    // Saves every child's current balance into local storage.
+    // Called whenever someone makes a withdrawal.
     saveBalances() {
         for (const child of this.#children) {
             let storageKey = `balance_${child.key()}`
@@ -46,7 +51,8 @@ class Family {
         }
     }
 
-    // Saves selected bonus activities to local storage
+    // Saves chosen bonus activities into local storage.
+    // This keeps bonus choices saved even if the page refreshes.
     saveBonuses() {
         for (const child of this.#children) {
             let storageKey = `bonus_${child.key()}`
@@ -67,7 +73,8 @@ class Family {
         }
     }
 
-    // Returns matching child object by key, or null if not found
+    // Finds and returns a specific child using their key name.
+    // Returns null if no child is found, preventing errors.
     getChildByKey(key) {
         for (const child of this.#children) {
             if (child.key() === key) {
@@ -77,8 +84,10 @@ class Family {
         return null
     }
 }
-
-// Class to handle child data and balance changes
+/* Child class:
+Stores info for a single child, including their balance and bonus.
+Having a separate class for each child keeps their details safe and organized,
+making sure deposits, withdrawals, and bonuses only affect that specific child. */
 class Child {
     // I have made the balance private to avoid unwanted additions 
     #balance = 0
@@ -140,27 +149,30 @@ class Child {
     }
 }
 
-// Main application class handling HTML interaction
+/* App class:
+Controls the whole web page and links it to the Family/Child data.
+It handles user actions like clicking buttons, filling out popups, showing error messages, 
+and updating what appears on the screen. */
 class App {
     // Private variables
     #family
 
-    #minBonusBalance = 40
+    #minBonusBalance = 40 // Needs more than $40 balance to qualify for a bonus
     #annualAllowance = 500 // $500 is the annual allowance
 
 
-    // Common elements
+    // Popup dropdown choices and submit button
     #bonusChildrenSelect
     #withdrawChildrenSelect
     #withdrawSubmit
 
-    // Starts app with starting allowance
+    // Creates the main app and sets up the family data.
     constructor() {
         this.#family = new Family(this.#annualAllowance)
-
     }
 
-    // This is the apps start up function
+    // Starts up the program when the web page opens.
+    // Connects buttons, loads saved data, and starts child panels on screen.
     start() {
         this.#bonusChildrenSelect = this.getElementById('bonus-children-select')
         this.#withdrawChildrenSelect = this.getElementById("withdraw-children-select")
@@ -197,7 +209,8 @@ class App {
         }
     }
 
-    // Renders child panels into app
+    // Displays panels for each child using an HTML template.
+    // Formats money amounts and sets green/red colors for bonus status.
     renderChildPanels() {
         // Get the child panel template
         let childTemplate = document.getElementById("child-template")
@@ -305,7 +318,7 @@ class App {
         bonusSubmit.addEventListener("click", this.tryToSelectBonus.bind(this))
     }
 
-    // Validates and processes bonus selection
+    // Checks inputs and chooses a bonus when the user submits the form, making it more robust.
     tryToSelectBonus(event) {
         event.preventDefault() // Stops the form from submitting
 
@@ -437,7 +450,7 @@ class App {
         // run the withdraw function
         child.withdraw(withdrawAmount)
 
-        // Set bonus to no bonus if balance falls below minimum amount
+        // Set bonus to no bonus if balance falls below or equal to the minimum amount
         if (child.balance() <= this.#minBonusBalance) {
             child.setBonusActivity("None")
             this.#family.saveBonuses()
@@ -460,7 +473,7 @@ class App {
         this.showMessage(message)
     }
 
-    // Returns element with the supplied id, or prints a console error if not found
+    // Returns element with the supplied id, or logs a console error if not found
     getElementById(id) {
         const element = document.getElementById(id)
 
@@ -472,7 +485,6 @@ class App {
     }
 
 }
-
 
 // Launches app
 new App(document).start();
