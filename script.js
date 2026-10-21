@@ -469,7 +469,7 @@ class App {
         this.renderChildPanels()
 
         // Sucsessful/confrimation message
-        let message = `You have withdrawn $${withdrawAmount} from ${child.name()}`
+        let message = `You have withdrawn $${withdrawAmount.toFixed(2)} from ${child.name()}`
         this.showMessage(message)
     }
 
